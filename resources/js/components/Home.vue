@@ -15,9 +15,9 @@
                 </span>
                 </p>
             </div>
-            <a class="panel-block">
+            <a v-for="(item,key) in lists" class="panel-block">
                 <div class="column is-9">
-                    marksheet
+                    {{ item.name }}
                 </div>
                 <div class="column is-1">
                 <span class="panel-icon">
@@ -48,6 +48,8 @@
         data() {
             return {
                 modalActive: '',
+                lists: {},
+                errors: {},
             }
         },
         methods: {
@@ -57,6 +59,14 @@
             closeModal() {
                 this.modalActive = '';
             }
+        },
+        mounted() {
+            axios.post('/getData').then((response) => {
+                this.lists = response.data;
+                console.log(response)
+            }).catch((error) => {
+                console.log(error);
+            })
         }
     }
 </script>
