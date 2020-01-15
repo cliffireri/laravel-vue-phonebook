@@ -1993,6 +1993,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -2008,7 +2011,8 @@ __webpack_require__.r(__webpack_exports__);
       lists: {},
       errors: {},
       showActive: '',
-      showUpdate: ''
+      showUpdate: '',
+      loading: false
     };
   },
   methods: {
@@ -2025,13 +2029,28 @@ __webpack_require__.r(__webpack_exports__);
     openUpdate: function openUpdate(key) {
       this.$children[2].list = this.lists[key];
       this.showUpdate = 'is-active';
+    },
+    del: function del(key, id) {
+      var _this = this;
+
+      if (confirm("Are you sure?")) {
+        this.loading = !this.loading;
+        axios["delete"]("/phonebook/".concat(id)).then(function (res) {
+          console.log('deleted');
+          _this.loading = !_this.loading;
+
+          _this.lists.splice(key, 1);
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      }
     }
   },
   mounted: function mounted() {
-    var _this = this;
+    var _this2 = this;
 
     axios.post('/getData').then(function (response) {
-      _this.lists = response.data;
+      _this2.lists = response.data;
       console.log(response);
     })["catch"](function (error) {
       console.log(error);
@@ -37883,7 +37902,13 @@ var render = function() {
                 }
               },
               [_vm._v("\n                Add Number\n            ")]
-            )
+            ),
+            _vm._v(" "),
+            _vm.loading
+              ? _c("span", { staticClass: "is-pulled-right" }, [
+                  _c("i", { staticClass: "fa fa-refresh fa-spin fa-2x fa-fw" })
+                ])
+              : _vm._e()
           ]),
           _vm._v(" "),
           _vm._m(0),
@@ -37896,7 +37921,19 @@ var render = function() {
                 )
               ]),
               _vm._v(" "),
-              _vm._m(1, true),
+              _c("div", { staticClass: "column is-1" }, [
+                _c("span", { staticClass: "panel-icon" }, [
+                  _c("i", {
+                    staticClass: "has-text-danger fa fa-trash",
+                    attrs: { "aria-hidden": "true" },
+                    on: {
+                      click: function($event) {
+                        return _vm.del(key, item.id)
+                      }
+                    }
+                  })
+                ])
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "column is-1" }, [
                 _c("span", { staticClass: "panel-icon" }, [
@@ -37979,19 +38016,6 @@ var staticRenderFns = [
             attrs: { "aria-hidden": "true" }
           })
         ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "column is-1" }, [
-      _c("span", { staticClass: "panel-icon" }, [
-        _c("i", {
-          staticClass: "has-text-danger fa fa-trash",
-          attrs: { "aria-hidden": "true" }
-        })
       ])
     ])
   }

@@ -53,6 +53,6 @@ class PhonebookController extends Controller
 
     public function destroy(Phonebook $phonebook)
     {
-        //
+        Phonebook::find($phonebook->id)->delete();
     }
 }

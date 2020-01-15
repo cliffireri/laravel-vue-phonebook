@@ -6,6 +6,9 @@
                 <button @click = "openModal()" class="button is-link is-outlined">
                     Add Number
                 </button>
+                <span class="is-pulled-right" v-if="loading">
+                     <i class="fa fa-refresh fa-spin fa-2x fa-fw"></i>
+                </span>
             </p>
             <div class="panel-block">
                 <p class="control has-icons-left">
@@ -21,7 +24,7 @@
                 </div>
                 <div class="column is-1">
                     <span class="panel-icon">
-                      <i class="has-text-danger fa fa-trash" aria-hidden="true"></i>
+                      <i class="has-text-danger fa fa-trash" aria-hidden="true" @click="del(key, item.id)"></i>
                     </span>
                 </div>
                 <div class="column is-1">
@@ -56,6 +59,7 @@
                 errors: {},
                 showActive: '',
                 showUpdate: '',
+                loading: false
             }
         },
         methods: {
@@ -72,6 +76,18 @@
             openUpdate(key) {
                 this.$children[2].list = this.lists[key];
                 this.showUpdate = 'is-active';
+            },
+            del(key, id){
+                if(confirm("Are you sure?")){
+                    this.loading = !this.loading;
+                    axios.delete(`/phonebook/${id}`).then((res) => {
+                        console.log('deleted')
+                        this.loading = !this.loading;
+                        this.lists.splice(key, 1);
+                    }).catch( (error) => {
+                        console.log(error)
+                    });
+                }
             }
         },
         mounted() {
