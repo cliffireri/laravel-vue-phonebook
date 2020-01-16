@@ -1893,7 +1893,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios.post('/phonebook', this.$data.list).then(function (response) {
-        console.log(response);
+        _this.$parent.lists.push(response.data);
 
         _this.$emit('closeRequest');
       })["catch"](function (error) {
